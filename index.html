@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chairman Product Research Report</title>
+  <style>
+    :root {
+      --bg: #f7f5f1;
+      --panel: #ffffff;
+      --ink: #1f2523;
+      --muted: #64706b;
+      --line: #ded8ce;
+      --accent: #0f766e;
+      --accent-dark: #064e46;
+      --accent-2: #b45309;
+      --soft: #e8f3ef;
+      --shadow: 0 18px 42px rgba(38, 34, 28, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.55;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 48px; }
+    header {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 24px;
+      align-items: end;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 22px;
+      margin-bottom: 18px;
+    }
+    h1 { margin: 0 0 8px; font-size: clamp(30px, 4vw, 48px); line-height: 1.05; letter-spacing: 0; }
+    .subtitle { margin: 0; color: var(--muted); max-width: 760px; }
+    .meta { display: grid; gap: 8px; justify-items: end; color: var(--muted); font-size: 14px; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 20px 0 26px; }
+    .search {
+      flex: 1 1 280px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      box-shadow: 0 8px 20px rgba(38, 34, 28, 0.05);
+    }
+    .search span { font-size: 13px; font-weight: 800; color: var(--accent-dark); text-transform: uppercase; }
+    .search input { width: 100%; border: 0; outline: 0; font: inherit; background: transparent; color: var(--ink); }
+    .filters { display: inline-flex; flex-wrap: wrap; gap: 8px; }
+    button {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font: inherit;
+      cursor: pointer;
+    }
+    button.active { border-color: var(--accent); background: var(--soft); color: var(--accent-dark); font-weight: 800; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      min-height: 280px;
+    }
+    .thumbs { display: grid; grid-template-rows: 1fr auto; background: #ede8df; min-width: 0; }
+    .main-img { width: 100%; height: 220px; object-fit: cover; display: block; cursor: zoom-in; }
+    .strip { display: flex; gap: 6px; overflow-x: auto; padding: 8px; }
+    .strip img {
+      width: 50px;
+      height: 42px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+    .strip img.selected { border-color: var(--accent); }
+    .content { padding: 18px; display: grid; gap: 12px; min-width: 0; }
+    .topline { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .index { font-weight: 800; color: var(--accent-2); font-size: 13px; text-transform: uppercase; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid var(--line);
+      white-space: nowrap;
+      background: var(--soft);
+      color: var(--accent-dark);
+    }
+    h2 { margin: 0; font-size: 20px; line-height: 1.25; letter-spacing: 0; }
+    .summary { color: var(--muted); margin: 0; font-size: 14px; }
+    dl { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 6px 10px; margin: 0; font-size: 14px; }
+    dt { color: var(--muted); }
+    dd { margin: 0; min-width: 0; }
+    .links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+    .links a {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: #faf9f6;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .note { margin: 24px 0 0; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); padding-top: 16px; }
+    dialog {
+      border: 0;
+      border-radius: 8px;
+      padding: 0;
+      width: min(920px, calc(100vw - 30px));
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+      background: var(--panel);
+    }
+    dialog::backdrop { background: rgba(20, 23, 22, 0.6); }
+    .modal-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+    .modal-img { width: 100%; max-height: 78vh; object-fit: contain; display: block; background: #eee8dc; }
+    @media (max-width: 920px) {
+      header { grid-template-columns: 1fr; }
+      .meta { justify-items: start; }
+      .grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 620px) {
+      .shell { width: min(100% - 20px, 1180px); padding-top: 18px; }
+      .card { grid-template-columns: 1fr; }
+      .main-img { height: 260px; }
+      dl { grid-template-columns: 84px minmax(0, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <section>
+        <h1>Chairman Product Research Report</h1>
+        <p class="subtitle">A client-facing product reference page built from six submitted image groups. Each card includes the supplied imagery, likely product identity or nearest market match, key specifications, and clickable reference links.</p>
+      </section>
+      <aside class="meta">
+        <span>Prepared: July 3, 2026</span>
+        <span>Image groups reviewed: 6</span>
+        <span>Categories: dining chairs, tables, outdoor, stools</span>
+      </aside>
+    </header>
+    <section class="toolbar" aria-label="Search and filters">
+      <label class="search" title="Search by product name, material, type, or reference source">
+        <span>Search</span>
+        <input id="search" type="search" placeholder="Brand, material, product type..." />
+      </label>
+      <div class="filters">
+        <button class="active" data-filter="all">All</button>
+        <button data-filter="dining-chair">Dining Chairs</button>
+        <button data-filter="dining-table">Dining Tables</button>
+        <button data-filter="outdoor-table">Outdoor Tables</button>
+        <button data-filter="bar-stool">Bar & Counter Stools</button>
+      </div>
+    </section>
+    <section class="grid" id="cards">
+      <article class="card" data-type="dining-chair" data-search="black windsor spindle dining chair rubberwood overstock stary walmart farmhouse">
+        <div class="thumbs">
+          <img class="main-img" src="1/1.1.png" alt="Black Windsor-style spindle dining chairs in a dining room" />
+          <div class="strip"><img class="selected" src="1/1.1.png" alt="Product 1 image 1" /><img src="1/1.2.jpg" alt="Product 1 image 2" /></div>
+        </div>
+        <div class="content">
+          <div class="topline"><span class="index">Product 01</span><span class="badge">Dining Chair</span></div>
+          <h2>Black Windsor / Spindle Back Dining Chair</h2>
+          <p class="summary">Likely product family: black Windsor-style spindle dining chairs, similar to Azure Black Rubberwood or STARY Windsor dining chair sets.</p>
+          <dl>
+            <dt>Visual cues</dt><dd>Curved top rail, vertical spindle back, black painted wood frame, stretcher-supported legs.</dd>
+            <dt>Material</dt><dd>Likely rubberwood or solid wood with black finish.</dd>
+            <dt>Use case</dt><dd>Kitchen, dining room, farmhouse, or mid-century inspired interiors.</dd>
+            <dt>Note</dt><dd>The original images do not show a brand or SKU, so references are nearest market matches.</dd>
+          </dl>
+          <div class="links"><a href="https://www.overstock.com/Home-Garden/Set-of-2-Azure-Black-Rubberwood-Dining-Chair-with-Windsor-Back/43819954/product.html" target="_blank" rel="noreferrer">Overstock Reference</a><a href="https://www.walmart.com/ip/STARY-Windsor-Dining-Chairs-Set-of-4-Kitchen-Dining-Room-Chairs-with-Spindle-Back-Mid-Century-Modern-Dining-Table-Chairs-Wood-Dining-Chair/17823223590" target="_blank" rel="noreferrer">Walmart Reference</a></div>
+        </div>
+      </article>
+      <article class="card" data-type="dining-chair" data-search="lucinda beliani boucle dining chair dark wood beige rubberwood 328636">
+        <div class="thumbs">
+          <img class="main-img" src="2/2.1.jpg" alt="Dark wood and beige boucle dining chairs" />
+          <div class="strip"><img class="selected" src="2/2.1.jpg" alt="Product 2 image 1" /><img src="2/2.2.jpg" alt="Product 2 image 2" /></div>
+        </div>
+        <div class="content">
+          <div class="topline"><span class="index">Product 02</span><span class="badge">Dining Chair</span></div>
+          <h2>Beliani LUCINDA Dark Wood Boucle Dining Chair</h2>
+          <p class="summary">The back structure, light boucle upholstery, bent support, and dark wood tone closely match Beliani's LUCINDA dining chair set.</p>
+          <dl>
+            <dt>Brand</dt><dd>Beliani LUCINDA, set of 2 dining chairs.</dd>
+            <dt>Material</dt><dd>100% polyester boucle upholstery with a rubberwood frame and lacquered finish.</dd>
+            <dt>Size</dt><dd>Approx. W49 x D55 x H79 cm; seat height approx. 44 cm.</dd>
+            <dt>Capacity</dt><dd>Approx. 120 kg.</dd>
+          </dl>
+          <div class="links"><a href="https://www.beliani.dk/sat-med-2-spisestuestole-i-tra-morkt-tra-og-beige-lucinda.html" target="_blank" rel="noreferrer">Beliani Product Page</a><a href="https://www.manomano.it/p/set-di-2-sedie-da-pranzo-in-stile-retro-seduta-imbottita-boucle-legno-scuro-e-maroa-beige-84684596" target="_blank" rel="noreferrer">ManoMano Reference</a></div>
+        </div>
+      </article>
+      <article class="card" data-type="dining-table" data-search="hkyijianda light birch finish round table metal legs amazon dining table mdf birch veneer">
+        <div class="thumbs">
+          <img class="main-img" src="3/3.1.png" alt="HKYIJIANDA light birch finish round table product screenshot" />
+          <div class="strip"><img class="selected" src="3/3.1.png" alt="Product 3 image 1" /></div>
+        </div>
+        <div class="content">
+          <div class="topline"><span class="index">Product 03</span><span class="badge">Dining Table</span></div>
+          <h2>HKYIJIANDA Light Birch Finish Round Table</h2>
+          <p class="summary">The supplied image is an Amazon product screenshot with brand, title, price, and basic specifications visible in the image.</p>
+          <dl>
+            <dt>Brand</dt><dd>HKYIJIANDA.</dd>
+            <dt>Product</dt><dd>Light birch finish round table with metal legs for indoor dining, entertaining, and daily use.</dd>
+            <dt>Material</dt><dd>Screenshot lists MDF, birch veneer, and metal; another visible field lists eucalyptus wood as frame material.</dd>
+            <dt>Size note</dt><dd>The screenshot contains conflicting dimensions. Confirm final dimensions on the active listing before purchasing.</dd>
+          </dl>
+          <div class="links"><a href="https://www.amazon.com/s?k=HKYIJIANDA+Light+Birch+Finish+Round+Table+with+Metal+Legs" target="_blank" rel="noreferrer">Amazon Search</a><a href="https://www.wayfair.com/furniture/pdp/millwood-pines-37inch-round-dining-table-small-round-kitchen-table-with-metal-legs-suitable-for-2-to-4-people-w117658311.html" target="_blank" rel="noreferrer">Wayfair Similar Table</a></div>
+        </div>
+      </article>
+      <article class="card" data-type="outdoor-table" data-search="puntongen outdoor rectangular dining table black metal patio table 4-6 amazon">
+        <div class="thumbs">
+          <img class="main-img" src="4/4.1.png" alt="Puntongen black outdoor rectangular dining table screenshot" />
+          <div class="strip"><img class="selected" src="4/4.1.png" alt="Product 4 image 1" /></div>
+        </div>
+        <div class="content">
+          <div class="topline"><span class="index">Product 04</span><span class="badge">Outdoor Table</span></div>
+          <h2>Puntongen Outdoor Rectangular Dining Table</h2>
+          <p class="summary">The supplied image is an Amazon product screenshot with a visible brand, title, color, material, shape, and dimensions.</p>
+          <dl>
+            <dt>Brand</dt><dd>Puntongen.</dd>
+            <dt>Product</dt><dd>Outdoor rectangular dining table for 4-6 people, suitable for deck, yard, and porch use.</dd>
+            <dt>Specs</dt><dd>Approx. 31.5"D x 47.3"W x 28.8"H; black; metal top; rectangular shape.</dd>
+            <dt>Status</dt><dd>The screenshot shows the item as currently unavailable.</dd>
+          </dl>
+          <div class="links"><a href="https://www.amazon.com/s?k=Puntongen+Outdoor+Rectangular+Dining+Table+for+4-6" target="_blank" rel="noreferrer">Amazon Search</a><a href="https://www.tesco.com/groceries/en-GB/products/325985458" target="_blank" rel="noreferrer">Tesco Similar Table</a></div>
+        </div>
+      </article>
+      <article class="card" data-type="bar-stool" data-search="allmodern nia vegan leather bar counter stool brown distressed black sled legs set of 2">
+        <div class="thumbs">
+          <img class="main-img" src="5/5.1.jpg" alt="Brown leather-look bar stools at a kitchen island" />
+          <div class="strip"><img class="selected" src="5/5.1.jpg" alt="Product 5 image 1" /><img src="5/5.2.jpg" alt="Product 5 image 2" /><img src="5/5.3.jpg" alt="Product 5 image 3" /></div>
+        </div>
+        <div class="content">
+          <div class="topline"><span class="index">Product 05</span><span class="badge">Bar & Counter Stool</span></div>
+          <h2>AllModern Nia Vegan Leather Bar & Counter Stool</h2>
+          <p class="summary">The images closely resemble the Nia product family: brown leather-look upholstery, black sled legs, low back, and stitched edging.</p>
+          <dl>
+            <dt>Product</dt><dd>Nia Vegan Leather Bar & Counter Stool, set of 2.</dd>
+            <dt>Material</dt><dd>Vegan leather upholstery, foam fill, and steel frame.</dd>
+            <dt>Size</dt><dd>Counter version approx. 34"H x 18"W x 22"D; 24" seat height; 18"W x 20"D seat.</dd>
+            <dt>Capacity</dt><dd>Approx. 250 lb.</dd>
+          </dl>
+          <div class="links"><a href="https://www.allmodern.com/furniture/pdp/allmodern-nia-vegan-leather-bar-counter-stool-a001091363.html" target="_blank" rel="noreferrer">AllModern Nia</a><a href="https://www.bigw.com.au/product/oikiture-2x-bar-stools-kitchen-chairs-pu-leather-brown/p/9900171461" target="_blank" rel="noreferrer">Oikiture Reference</a><a href="https://www.kmart.com.au/product/alfordson-2x-bar-stools-66cm-kitchen-counter-metal-vintage-dining-chairs-brown-110049807/" target="_blank" rel="noreferrer">Kmart Reference</a></div>
+        </div>
+      </article>
+      <article class="card" data-type="bar-stool" data-search="hillsdale aubrie off white swivel backless bar stool white metal round upholstered counter stool">
+        <div class="thumbs">
+          <img class="main-img" src="6/6.1.jpg" alt="Cream round seat stools with white metal legs at a kitchen island" />
+          <div class="strip"><img class="selected" src="6/6.1.jpg" alt="Product 6 image 1" /><img src="6/6.2.jpg" alt="Product 6 image 2" /></div>
+        </div>
+        <div class="content">
+          <div class="topline"><span class="index">Product 06</span><span class="badge">Bar & Counter Stool</span></div>
+          <h2>Hillsdale Aubrie / Round Upholstered Backless Stool</h2>
+          <p class="summary">The original images show a round cream upholstered seat, white metal legs, and a circular footrest. Hillsdale Aubrie and Cutler-style stools are close references.</p>
+          <dl>
+            <dt>Candidate</dt><dd>Hillsdale Furniture Aubrie Off-White Swivel Backless Bar Stool, model 4556-832.</dd>
+            <dt>Material</dt><dd>Polyester upholstered seat with a light metal frame and swivel construction.</dd>
+            <dt>Features</dt><dd>Backless round seat, circular footrest, compact profile for kitchen islands or bar counters.</dd>
+            <dt>Note</dt><dd>The submitted image has a tufted seat detail, so this should be treated as a similar sourcing direction.</dd>
+          </dl>
+          <div class="links"><a href="https://www.homedepot.com/p/Hillsdale-Furniture-Aubrie-Off-White-Swivel-Backless-Bar-Stool-4556-832/303378081" target="_blank" rel="noreferrer">Home Depot Candidate</a><a href="https://www.potterybarn.com/products/cutler-stool-mp/" target="_blank" rel="noreferrer">Pottery Barn Cutler</a><a href="https://www.fredmeyer.com/p/maven-lane-pullman-backless-swivel-kitchen-bar-stool-alabaster-white-set-of-3/0019380232269" target="_blank" rel="noreferrer">Maven Lane Reference</a></div>
+        </div>
+      </article>
+    </section>
+    <p class="note">Research note: This page preserves the submitted product images as the main visual reference. When no brand or SKU is visible in the supplied images, the linked products should be treated as closest online matches rather than final product identification. Confirm supplier links, SKUs, and dimension drawings before purchasing.</p>
+  </main>
+  <dialog id="viewer">
+    <div class="modal-head"><strong id="viewerTitle">Image Preview</strong><button id="closeViewer" type="button">Close</button></div>
+    <img class="modal-img" id="viewerImg" alt="Expanded product preview" />
+  </dialog>
+  <script>
+    const cards = Array.from(document.querySelectorAll(".card"));
+    const search = document.querySelector("#search");
+    const buttons = Array.from(document.querySelectorAll("[data-filter]"));
+    const viewer = document.querySelector("#viewer");
+    const viewerImg = document.querySelector("#viewerImg");
+    const viewerTitle = document.querySelector("#viewerTitle");
+    let activeFilter = "all";
+    function applyFilters() {
+      const q = search.value.trim().toLowerCase();
+      for (const card of cards) {
+        const matchesFilter = activeFilter === "all" || card.dataset.type === activeFilter;
+        const text = `${card.innerText} ${card.dataset.search}`.toLowerCase();
+        card.style.display = matchesFilter && text.includes(q) ? "" : "none";
+      }
+    }
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        activeFilter = button.dataset.filter;
+        buttons.forEach((b) => b.classList.toggle("active", b === button));
+        applyFilters();
+      });
+    });
+    search.addEventListener("input", applyFilters);
+    document.querySelectorAll(".strip img").forEach((thumb) => {
+      thumb.addEventListener("click", () => {
+        const card = thumb.closest(".card");
+        const main = card.querySelector(".main-img");
+        main.src = thumb.src;
+        main.alt = thumb.alt;
+        card.querySelectorAll(".strip img").forEach((img) => img.classList.toggle("selected", img === thumb));
+      });
+    });
+    document.querySelectorAll(".main-img").forEach((img) => {
+      img.addEventListener("click", () => {
+        viewerImg.src = img.src;
+        viewerTitle.textContent = img.closest(".card").querySelector("h2").textContent;
+        viewer.showModal();
+      });
+    });
+    document.querySelector("#closeViewer").addEventListener("click", () => viewer.close());
+    viewer.addEventListener("click", (event) => {
+      if (event.target === viewer) viewer.close();
+    });
+  </script>
+</body>
+</html>
